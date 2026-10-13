@@ -1,408 +1,938 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MBTI로 나만의 포켓몬 찾기</title>
-    <style>
-        :root {
-            --bg-primary: #FFFDF0;
-            --bg-card: #FFFFFF;
-            --accent-yellow: #FFDE59;
-            --accent-hover: #F2C94C;
-            --accent-orange: #FF914D;
-            --text-main: #4A3E3D;
-            --text-sub: #7A6867;
-            --border-color: #F0E6D2;
-            --shadow: 0 8px 24px rgba(149, 117, 83, 0.12);
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MBTI로 포켓몬 찾기 ⚡</title>
+  <style>
+    :root {
+      --bg-cream: #FFFDF0;
+      --bg-gradient: linear-gradient(180deg, #FFFDF0 0%, #FEF3C7 100%);
+      --card-bg: #FFFFFF;
+      --card-border: #FDE68A;
+      --card-border-hover: #F59E0B;
+      --text-main: #292524;
+      --text-muted: #78350F;
+      --accent-amber: #F59E0B;
+      --accent-orange: #EA580C;
+      --accent-yellow: #FEF08A;
+      --shadow-sm: 0 4px 6px -1px rgba(217, 119, 6, 0.08), 0 2px 4px -2px rgba(217, 119, 6, 0.05);
+      --shadow-lg: 0 16px 32px -6px rgba(217, 119, 6, 0.18), 0 8px 16px -4px rgba(217, 119, 6, 0.1);
+      --radius-lg: 1.25rem;
+      --radius-xl: 1.75rem;
+      --font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "맑은 고딕", sans-serif;
+    }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-        }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-        body {
-            background-color: var(--bg-primary);
-            color: var(--text-main);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
+    body {
+      font-family: var(--font-family);
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.5rem 1rem 3rem 1rem;
+      line-height: 1.6;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-        .container {
-            width: 100%;
-            max-width: 680px;
-            background: var(--bg-card);
-            border-radius: 28px;
-            padding: 36px 28px;
-            box-shadow: var(--shadow);
-            border: 3px solid var(--border-color);
-            text-align: center;
-            transition: all 0.3s ease;
-        }
+    .container {
+      width: 100%;
+      max-width: 860px;
+      margin: 0 auto;
+    }
 
-        header h1 {
-            font-size: 1.9rem;
-            color: var(--text-main);
-            margin-bottom: 10px;
-            word-break: keep-all;
-        }
+    header {
+      text-align: center;
+      margin-bottom: 1.75rem;
+      padding-top: 1rem;
+    }
 
-        header p {
-            font-size: 1.1rem;
-            color: var(--text-sub);
-            margin-bottom: 28px;
-            word-break: keep-all;
-        }
+    .header-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background-color: #FEF3C7;
+      border: 1.5px solid var(--card-border);
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-weight: 800;
+      padding: 0.45rem 1.25rem;
+      border-radius: 9999px;
+      margin-bottom: 0.75rem;
+      box-shadow: var(--shadow-sm);
+    }
 
-        /* MBTI 그리드 레이아웃 */
-        .mbti-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-            margin-bottom: 10px;
-        }
+    h1 {
+      font-size: 2.25rem;
+      font-weight: 900;
+      color: #78350F;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+      word-break: keep-all;
+    }
 
-        @media (max-width: 480px) {
-            .mbti-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 10px;
-            }
-        }
+    .subtitle {
+      font-size: 1.1rem;
+      color: #92400E;
+      font-weight: 600;
+      word-break: keep-all;
+    }
 
-        .mbti-btn {
-            background-color: #FFF8DC;
-            border: 2px solid #F5E6B3;
-            border-radius: 16px;
-            padding: 16px 8px;
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--text-main);
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.03);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-        }
+    .filter-bar {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin: 1.5rem auto;
+      background: rgba(254, 243, 199, 0.7);
+      padding: 0.35rem;
+      border-radius: 9999px;
+      border: 1.5px solid var(--card-border);
+      max-width: 380px;
+    }
 
-        .mbti-btn span.desc {
-            font-size: 0.8rem;
-            font-weight: normal;
-            color: var(--text-sub);
-        }
+    .filter-btn {
+      flex: 1;
+      border: none;
+      background: transparent;
+      padding: 0.55rem 1rem;
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #B45309;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
 
-        .mbti-btn:hover {
-            background-color: var(--accent-yellow);
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(255, 222, 89, 0.4);
-            border-color: var(--accent-hover);
-        }
+    .filter-btn.active {
+      background: #FFFFFF;
+      color: #78350F;
+      box-shadow: 0 2px 8px rgba(180, 83, 9, 0.18);
+    }
 
-        .mbti-btn:active {
-            transform: translateY(0);
-        }
+    .mbti-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
 
-        /* 결과 화면 디자인 */
-        .result-card {
-            display: none;
-            animation: fadeIn 0.4s ease-out forwards;
-        }
+    .mbti-card {
+      background: var(--card-bg);
+      border: 2px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      padding: 1.2rem 0.75rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
+    .mbti-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #F59E0B, #EA580C);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
 
-        .badge {
-            display: inline-block;
-            background-color: var(--accent-yellow);
-            color: var(--text-main);
-            font-weight: 800;
-            font-size: 1.1rem;
-            padding: 6px 18px;
-            border-radius: 20px;
-            margin-bottom: 16px;
-        }
+    .mbti-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--card-border-hover);
+      box-shadow: var(--shadow-lg);
+    }
 
-        .pokemon-emoji {
-            font-size: 6.5rem;
-            line-height: 1;
-            margin: 15px 0;
-            filter: drop-shadow(0 6px 8px rgba(0,0,0,0.1));
-            animation: bounce 2s infinite ease-in-out;
-        }
+    .mbti-card:hover::before {
+      opacity: 1;
+    }
 
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
+    .mbti-badge {
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: #D97706;
+      letter-spacing: 0.05em;
+    }
 
-        .pokemon-name {
-            font-size: 2.2rem;
-            font-weight: 800;
-            color: var(--text-main);
-            margin-bottom: 16px;
-        }
+    .mbti-thumb-container {
+      width: 76px;
+      height: 76px;
+      margin: 0.4rem 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
 
-        .reason-box {
-            background-color: #FFFDF5;
-            border: 2px dashed #F2D283;
-            border-radius: 18px;
-            padding: 20px;
-            margin: 20px 0;
-            text-align: left;
-        }
+    .mbti-thumb-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.12));
+      transition: transform 0.2s ease;
+    }
 
-        .reason-box p {
-            font-size: 1.1rem;
-            line-height: 1.7;
-            color: var(--text-main);
-            word-break: keep-all;
-        }
+    .mbti-card:hover .mbti-thumb-img {
+      transform: scale(1.08);
+    }
 
-        .match-box {
-            background-color: #FFF3E0;
-            border-radius: 16px;
-            padding: 16px;
-            margin-bottom: 28px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
+    .mbti-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #44403C;
+      line-height: 1.25;
+      word-break: keep-all;
+    }
 
-        .match-title {
-            font-weight: 700;
-            font-size: 1.05rem;
-            color: var(--accent-orange);
-        }
+    .result-section {
+      display: none;
+      animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
 
-        .match-content {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--text-main);
-        }
+    .result-card {
+      background: var(--card-bg);
+      border: 3px solid #FDE68A;
+      border-radius: var(--radius-xl);
+      padding: 2.25rem 1.75rem;
+      box-shadow: var(--shadow-lg);
+      text-align: center;
+      position: relative;
+    }
 
-        .reset-btn {
-            background-color: var(--accent-orange);
-            color: white;
-            border: none;
-            border-radius: 20px;
-            padding: 16px 36px;
-            font-size: 1.2rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 12px rgba(255, 145, 77, 0.3);
-            width: 100%;
-            max-width: 280px;
-        }
+    .result-mbti-tag {
+      display: inline-block;
+      background-color: #FEF3C7;
+      color: #92400E;
+      font-size: 1.15rem;
+      font-weight: 800;
+      padding: 0.45rem 1.4rem;
+      border-radius: 9999px;
+      margin-bottom: 1.25rem;
+      border: 1.5px solid #FDE68A;
+    }
 
-        .reset-btn:hover {
-            background-color: #E07A38;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(255, 145, 77, 0.4);
-        }
+    .artwork-wrapper {
+      position: relative;
+      width: 240px;
+      height: 240px;
+      margin: 0 auto 1rem auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle, #FEF9C3 0%, rgba(254, 249, 195, 0) 70%);
+      border-radius: 50%;
+    }
 
-        .reset-btn:active {
-            transform: translateY(0);
-        }
-    </style>
+    .artwork-img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 12px 18px rgba(217, 119, 6, 0.22));
+      animation: float 3.5s ease-in-out infinite;
+      transition: opacity 0.3s ease;
+    }
+
+    .artwork-spinner {
+      position: absolute;
+      width: 42px;
+      height: 42px;
+      border: 4px solid #FDE68A;
+      border-top-color: #F59E0B;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    .artwork-fallback-emoji {
+      display: none;
+      font-size: 6rem;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .pokemon-name-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .pokemon-name {
+      font-size: 2.35rem;
+      font-weight: 900;
+      color: #78350F;
+    }
+
+    .pokemon-emoji {
+      font-size: 2rem;
+    }
+
+    .pokemon-subtitle-text {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #D97706;
+      margin-bottom: 1.5rem;
+    }
+
+    .reason-box {
+      background-color: #FFFDF0;
+      border: 2px dashed #FDE68A;
+      border-radius: var(--radius-lg);
+      padding: 1.35rem;
+      margin-bottom: 1.75rem;
+      text-align: left;
+    }
+
+    .reason-box h3 {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #78350F;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .reason-text {
+      font-size: 1.05rem;
+      color: #44403C;
+      line-height: 1.65;
+      font-weight: 600;
+      word-break: keep-all;
+    }
+
+    .match-box {
+      background: linear-gradient(135deg, #FFF7ED 0%, #FEF3C7 100%);
+      border: 2px solid #FDBA74;
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      text-align: left;
+      margin-bottom: 2rem;
+    }
+
+    .match-header {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #C2410C;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .match-content {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: #FFFFFF;
+      padding: 0.9rem 1.1rem;
+      border-radius: 1rem;
+      border: 1.5px solid #FED7AA;
+    }
+
+    .match-artwork {
+      width: 64px;
+      height: 64px;
+      object-fit: contain;
+      flex-shrink: 0;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+    }
+
+    .match-info {
+      flex: 1;
+    }
+
+    .match-mbti-name {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #9A3412;
+      margin-bottom: 0.2rem;
+    }
+
+    .match-desc {
+      font-size: 0.95rem;
+      color: #57534E;
+      line-height: 1.45;
+      word-break: keep-all;
+      font-weight: 500;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .action-btn {
+      font-family: inherit;
+      border: none;
+      font-size: 1.1rem;
+      font-weight: 800;
+      padding: 0.9rem 2rem;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      box-shadow: 0 4px 12px rgba(217, 119, 6, 0.2);
+    }
+
+    .btn-reset {
+      background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+      color: #FFFFFF;
+      flex: 1;
+      max-width: 260px;
+    }
+
+    .btn-reset:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(217, 119, 6, 0.3);
+      background: linear-gradient(135deg, #D97706 0%, #B45309 100%);
+    }
+
+    .btn-share {
+      background: #FFFFFF;
+      color: #92400E;
+      border: 2px solid #FDE68A;
+      flex: 1;
+      max-width: 220px;
+    }
+
+    .btn-share:hover {
+      background: #FEF3C7;
+      transform: translateY(-2px);
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background-color: #292524;
+      color: #FFFFFF;
+      padding: 0.8rem 1.6rem;
+      border-radius: 9999px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 100;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 768px) {
+      .mbti-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+      }
+
+      h1 {
+        font-size: 1.85rem;
+      }
+
+      .subtitle {
+        font-size: 1rem;
+      }
+
+      .artwork-wrapper {
+        width: 190px;
+        height: 190px;
+      }
+
+      .pokemon-name {
+        font-size: 1.9rem;
+      }
+
+      .result-card {
+        padding: 1.5rem 1.15rem;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .mbti-card {
+        padding: 0.85rem 0.5rem;
+      }
+      .mbti-thumb-container {
+        width: 60px;
+        height: 60px;
+      }
+    }
+  </style>
 </head>
 <body>
 
-<div class="container">
-    <!-- MBTI 선택 화면 -->
-    <div id="selection-view">
-        <header>
-            <h1>⚡ MBTI로 나만의 포켓몬 찾기 🌿</h1>
-            <p>당신의 MBTI 성격 유형을 선택해보세요!</p>
-        </header>
+  <div class="container">
+    <header>
+      <div class="header-badge">
+        <span>⚡</span> 나만의 포켓몬 찾기 <span>⚡</span>
+      </div>
+      <h1>MBTI로 알아보는 나만의 포켓몬</h1>
+      <p class="subtitle">16가지 MBTI를 선택하고 고화질 공식 포켓몬과 환상의 궁합을 확인해 보세요!</p>
 
-        <div class="mbti-grid" id="mbti-grid">
-            <!-- JS로 버튼이 동적 생성됩니다 -->
+      <div class="filter-bar" id="filter-bar">
+        <button class="filter-btn active" onclick="filterMBTI('ALL', this)">전체 (16)</button>
+        <button class="filter-btn" onclick="filterMBTI('E', this)">🔥 E (외향형)</button>
+        <button class="filter-btn" onclick="filterMBTI('I', this)">🌿 I (내향형)</button>
+      </div>
+    </header>
+
+    <main>
+      <div class="mbti-grid" id="mbti-grid">
+        <!-- Dynamic MBTI cards rendered via JavaScript -->
+      </div>
+
+      <section class="result-section" id="result-section">
+        <div class="result-card">
+          <div class="result-mbti-tag" id="result-mbti-badge">ENFP · 열정적인 창의가</div>
+          
+          <div class="artwork-wrapper">
+            <div class="artwork-spinner" id="artwork-spinner"></div>
+            <img id="result-artwork" class="artwork-img" src="" alt="포켓몬 공식 아트워크" style="opacity: 0;" onload="handleImgLoad()" onerror="handleImgError()">
+            <div id="artwork-fallback" class="artwork-fallback-emoji">⚡</div>
+          </div>
+
+          <div class="pokemon-name-row">
+            <h2 class="pokemon-name" id="result-pokemon-name">피카츄</h2>
+            <span class="pokemon-emoji" id="result-emoji">⚡</span>
+          </div>
+          <div class="pokemon-subtitle-text" id="result-subtitle">"통통 튀는 긍정 에너지와 호기심 대장"</div>
+
+          <div class="reason-box">
+            <h3><span>💡</span> 어울리는 이유</h3>
+            <p class="reason-text" id="result-reason">
+              가슴 속 타오르는 불꽃처럼 뜨거운 열정과 긍정의 아이콘! 새로운 사람과 무궁무진한 도전을 사랑하는 마음 따뜻한 활동가입니다.
+            </p>
+          </div>
+
+          <div class="match-box">
+            <div class="match-header">
+              <span>💖</span> 최고의 궁합 포켓몬
+            </div>
+            <div class="match-content">
+              <img id="match-artwork" class="match-artwork" src="" alt="궁합 포켓몬" onerror="this.style.display='none'">
+              <div class="match-info">
+                <div class="match-mbti-name" id="match-title">INTJ - 루카리오</div>
+                <div class="match-desc" id="match-reason">
+                  냉철하고 명석한 루카리오가 피카츄의 반짝이는 열정과 아이디어를 확실한 현실로 만들어줍니다.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="button-group">
+            <button class="action-btn btn-reset" onclick="resetView()">
+              <span>🔄</span> 다른 MBTI 고르기
+            </button>
+            <button class="action-btn btn-share" onclick="copyResult()">
+              <span>📋</span> 결과 복사
+            </button>
+          </div>
         </div>
-    </div>
+      </section>
+    </main>
+  </div>
 
-    <!-- 결과 화면 -->
-    <div id="result-view" class="result-card">
-        <div class="badge" id="res-mbti">ISTJ</div>
-        <div class="pokemon-emoji" id="res-emoji">🐢</div>
-        <div class="pokemon-name" id="res-name">거북왕</div>
-        
-        <div class="reason-box">
-            <p id="res-reason">어울리는 이유가 들어갑니다.</p>
-        </div>
+  <div class="toast" id="toast">결과가 클립보드에 복사되었습니다! 🎉</div>
 
-        <div class="match-box">
-            <span class="match-title">❤️ 환상의 궁합:</span>
-            <span class="match-content" id="res-match">ENFP (토게피 🥚)</span>
-        </div>
+  <script>
+    const getArtworkUrl = (id) => `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
 
-        <button class="reset-btn" onclick="resetSelection()">🔄 다시 고르기</button>
-    </div>
-</div>
-
-<script>
-    // MBTI별 포켓몬 데이터 정의
-    const pokemonData = {
-        "ISTJ": {
-            name: "거북왕",
-            emoji: "🐢",
-            reason: "신중하고 책임감이 강하여 한 번 맡은 일은 끝까지 완수합니다. 거북왕처럼 묵묵하고 단단하게 주변을 지키는 든든한 파트너입니다.",
-            match: "ENFP (토게피 🥚)"
-        },
-        "ISFJ": {
-            name: "해피너스",
-            emoji: "💗",
-            reason: "따뜻하고 상냥한 마음씨로 타인을 배려하는 평화주의자입니다. 상처받은 포켓몬을 다정하게 치료해주는 해피너스와 꼭 닮았습니다.",
-            match: "ENTP (로토무 ⚡)"
-        },
-        "INFJ": {
-            name: "뮤",
-            emoji: "✨",
-            reason: "신비롭고 깊은 통찰력을 가지고 있으며, 자신만의 이상을 품고 살아갑니다. 세상의 근원을 품은 희귀하고 순수한 뮤와 같은 감성을 지녔습니다.",
-            match: "ESTP (피카츄 ⚡)"
-        },
-        "INTJ": {
-            name: "뮤츠",
-            emoji: "🧠",
-            reason: "뛰어난 지능과 냉철한 분석력으로 목표를 완벽하게 달성합니다. 스스로 최고가 되기 위해 정진하는 완벽주의자 뮤츠와 높은 싱크로율을 자랑합니다.",
-            match: "ESFP (푸린 🎤)"
-        },
-        "ISTP": {
-            name: "루카리오",
-            emoji: "🥋",
-            reason: "위기 상황에서도 냉철한 판단력을 발휘하며 실전에 강합니다. 파동을 느끼고 과묵하게 승리를 이끌어내는 루카리오처럼 도도하고 유능합니다.",
-            match: "ENFJ (망나뇽 🐉)"
-        },
-        "ISFP": {
-            name: "메타몽",
-            emoji: "🎨",
-            reason: "유연하고 온화하며 어디서든 상황에 맞게 잘 적응합니다. 어떤 모습으로든 변신할 수 있는 예술가적 자유로움을 가진 메타몽과 어울립니다.",
-            match: "ENTJ (리자몽 🔥)"
-        },
-        "INFP": {
-            name: "이브이",
-            emoji: "🌟",
-            reason: "무한한 가능성과 따뜻한 감성을 품고 있는 꿈꾸는 이상가입니다. 어떤 환경과 마음가짐에 따라 다채롭게 진화하는 이브이 그 자체입니다.",
-            match: "ESTJ (윈디 🦁)"
-        },
-        "INTP": {
-            name: "팬텀",
-            emoji: "👻",
-            reason: "호기심이 많고 엉뚱하면서도 기발한 창의력을 자랑하는 아이디어 파크입니다. 예측 불허의 호기심과 지적 탐구심을 가진 팬텀과 닮았습니다.",
-            match: "ESFJ (라이츄 ⚡)"
-        },
-        "ESTP": {
-            name: "피카츄",
-            emoji: "⚡",
-            reason: "에너지가 넘치고 순발력이 뛰어나며 순식간에 행동에 나서는 모험가입니다. 어디서나 밝고 당당하게 전기를 뿜어내는 피카츄의 매력을 가졌습니다.",
-            match: "INFJ (뮤 ✨)"
-        },
-        "ESFP": {
-            name: "푸린",
-            emoji: "🎤",
-            reason: "어디서나 분위기를 밝게 만드는 스포트라이트의 주인공입니다. 사랑스러운 매력과 노래로 모두의 시선을 사로잡는 분위기 메이커 푸린입니다.",
-            match: "INTJ (뮤츠 🧠)"
-        },
-        "ENFP": {
-            name: "토게피",
-            emoji: "🥚",
-            reason: "행복과 긍정적인 에너지를 주위에 뿜어내는 호기심 대장입니다. 통통 튀는 아이디어와 따뜻한 마음으로 모두를 미소 짓게 만드는 토게피입니다.",
-            match: "ISTJ (거북왕 🐢)"
-        },
-        "ENTP": {
-            name: "로토무",
-            emoji: "⚡",
-            reason: "재치 넘치고 새로운 도전을 즐기는 창의적인 솔루션 제시자입니다. 가전제품을 넘나들며 변신하는 다재다능한 로토무처럼 순발력이 넘칩니다.",
-            match: "ISFJ (해피너스 💗)"
-        },
-        "ESTJ": {
-            name: "윈디",
-            emoji: "🦁",
-            reason: "솔선수범하는 리더십과 강한 책임감으로 무리를 이끕니다. 위풍당당한 기상과 신뢰할 수 있는 든든함을 갖춘 전설의 포켓몬 윈디와 같습니다.",
-            match: "INFP (이브이 🌟)"
-        },
-        "ESFJ": {
-            name: "라이츄",
-            emoji: "⚡",
-            reason: "다정다감하고 친화력이 좋아 동료들과 어울리는 것을 좋아합니다. 따뜻한 성격으로 주변 사람들을 살뜰히 챙기는 친절한 라이츄 타입입니다.",
-            match: "INTP (팬텀 👻)"
-        },
-        "ENFJ": {
-            name: "망나뇽",
-            emoji: "🐉",
-            reason: "넓은 포용력과 따뜻한 마음으로 모두를 아우르는 조력자입니다. 거친 바다에서도 사람을 구하는 따뜻하고 든든한 망나뇽처럼 성인군자형입니다.",
-            match: "ISTP (루카리오 🥋)"
-        },
-        "ENTJ": {
-            name: "리자몽",
-            emoji: "🔥",
-            reason: "원대한 목표를 향해 열정적으로 진격하는 대담한 리더입니다. 불타오르는 승부욕과 추진력으로 앞장서서 나아가는 리자몽의 기상을 가지고 있습니다.",
-            match: "ISFP (메타몽 🎨)"
-        }
+    const mbtiData = {
+      ENFP: {
+        mbti: "ENFP",
+        id: 25,
+        title: "열정적인 창의가",
+        pokemon: "피카츄",
+        emoji: "⚡",
+        typeGroup: "E",
+        subtitle: "통통 튀는 긍정 에너지와 호기심 대장",
+        reason: "언제나 밝은 에너지와 통통 튀는 호기심으로 주변 사람들에게 기쁨을 선사합니다. 새로운 가능성과 신나는 도전을 망설임 없이 즐기는 활동가입니다.",
+        matchMbti: "INTJ",
+        matchPokemon: "루카리오",
+        matchId: 448,
+        matchReason: "냉철하고 단단한 루카리오가 피카츄의 자유로운 열정과 아이디어를 실현 가능하게 지지해 줍니다."
+      },
+      ENTP: {
+        mbti: "ENTP",
+        id: 94,
+        title: "기발한 재능꾼",
+        pokemon: "팬텀",
+        emoji: "👻",
+        typeGroup: "E",
+        subtitle: "장난기 넘치는 창의적 상상력의 소유자",
+        reason: "풍부한 유머 감각과 독창적인 생각으로 통념을 깨부수는 상상력 대장입니다. 거침없는 재치와 날카로운 기발함으로 분위기를 장악합니다.",
+        matchMbti: "INFJ",
+        matchPokemon: "가디안",
+        matchId: 282,
+        matchReason: "가디안의 깊이 있는 통찰력이 팬텀의 톡톡 튀는 호기심에 신선하고 깊은 의미를 더해줍니다."
+      },
+      ENFJ: {
+        mbti: "ENFJ",
+        id: 468,
+        title: "희망의 전도사",
+        pokemon: "토게키스",
+        emoji: "🕊️",
+        typeGroup: "E",
+        subtitle: "모두에게 평화와 용기를 선사하는 힐러",
+        reason: "주변 이들에게 용기와 활력을 전파하는 진정한 리더입니다. 사람들의 잠재력을 이끌어내고 따뜻한 행복을 나누는 데 온 마음을 쏟습니다.",
+        matchMbti: "INTP",
+        matchPokemon: "뮤",
+        matchId: 151,
+        matchReason: "뮤의 순수하고 독창적인 탐구 정신이 토게키스의 포용력에 끝없는 감동을 가져다줍니다."
+      },
+      ENTJ: {
+        mbti: "ENTJ",
+        id: 150,
+        title: "용맹한 리더",
+        pokemon: "뮤츠",
+        emoji: "🔮",
+        typeGroup: "E",
+        subtitle: "압도적인 카리스마와 명석한 비전",
+        reason: "명확한 비전과 강력한 카리스마로 목적지를 향해 거침없이 나아갑니다. 높은 이상과 철저한 논리로 위기를 극복하는 대담한 군주입니다.",
+        matchMbti: "INFP",
+        matchPokemon: "이브이",
+        matchId: 133,
+        matchReason: "순수하고 다채로운 감성을 지닌 이브이가 뮤츠의 카리스마 속에 아늑한 휴식처를 선사합니다."
+      },
+      ESFP: {
+        mbti: "ESFP",
+        id: 39,
+        title: "해피 바이러스",
+        pokemon: "푸린",
+        emoji: "🎤",
+        typeGroup: "E",
+        subtitle: "통통 튀는 무대의 사랑스러운 주인공",
+        reason: "어디서나 스포트라이트를 받는 유쾌한 존재! 통통 튀는 흥과 지치지 않는 긍정 분위기로 모두를 순식간에 매료시킵니다.",
+        matchMbti: "ISTJ",
+        matchPokemon: "아머까오",
+        matchId: 865,
+        matchReason: "묵묵하고 굳건한 아머까오가 푸린의 유쾌함에 흔들림 없는 안도감과 울타리를 만들어줍니다."
+      },
+      ESTP: {
+        mbti: "ESTP",
+        title: "에너지 모험가",
+        pokemon: "리자몽",
+        emoji: "🔥",
+        id: 6,
+        typeGroup: "E",
+        subtitle: "화끈한 행동력과 자신감 넘치는 모험가",
+        reason: "가슴 뜨거운 열정과 순발력 넘치는 판단력으로 거침없이 현장에 돌진합니다. 실패를 두려워하지 않는 대담한 순발력의 소유자입니다.",
+        matchMbti: "ISFJ",
+        matchPokemon: "이상해씨",
+        matchId: 1,
+        matchReason: "포근하고 세심하게 보살펴주는 이상해씨가 리자몽의 화끈한 에너지에 편안한 휴식을 제공합니다."
+      },
+      ESFJ: {
+        mbti: "ESFJ",
+        title: "친절한 수호자",
+        pokemon: "해피너스",
+        emoji: "💖",
+        id: 242,
+        typeGroup: "E",
+        subtitle: "모두에게 따스한 온기를 건네는 천사",
+        reason: "주변 사람들의 작은 변화까지 세심하게 살피고 진심으로 도웁니다. 헌신적이고 따스한 정으로 만나는 이들에게 행복을 가득 선사합니다.",
+        matchMbti: "ISTP",
+        matchPokemon: "잠만보",
+        matchId: 143,
+        matchReason: "느긋하지만 결정적 순간 든든한 잠만보가 해피너스의 조건 없는 헌신에 가장 깊은 의지가 되어줍니다."
+      },
+      ESTJ: {
+        mbti: "ESTJ",
+        title: "원칙주의 대장",
+        pokemon: "거북왕",
+        emoji: "🐢",
+        id: 9,
+        typeGroup: "E",
+        subtitle: "철저한 신뢰와 높은 책임감의 수호자",
+        reason: "체계적인 원칙과 철저한 책임감으로 무리를 안전하게 이끕니다. 약속을 반드시 지키며 단단한 껍질처럼 믿음직한 기둥이 되어줍니다.",
+        matchMbti: "ISFP",
+        matchPokemon: "메타몽",
+        matchId: 132,
+        matchReason: "유연하고 따뜻한 메타몽의 매력이 거북왕의 엄격함을 부드럽고 다정하게 풀어줍니다."
+      },
+      INFP: {
+        mbti: "INFP",
+        title: "낭만적인 이상가",
+        pokemon: "이브이",
+        emoji: "🦊",
+        id: 133,
+        typeGroup: "I",
+        subtitle: "무한한 가능성과 아름다운 감성",
+        reason: "풍부한 상상력과 순수한 진정성을 품고 있습니다. 다양한 환경 속에서 영롱한 자아를 꽃피우며 타인의 마음에 따뜻한 위로를 전합니다.",
+        matchMbti: "ENTJ",
+        matchPokemon: "뮤츠",
+        matchId: 150,
+        matchReason: "당당한 뮤츠의 카리스마와 결단력이 이브이가 지닌 꿈과 이상을 현실로 단단히 지켜줍니다."
+      },
+      INTP: {
+        mbti: "INTP",
+        title: "신비로운 연구가",
+        pokemon: "뮤",
+        emoji: "✨",
+        id: 151,
+        typeGroup: "I",
+        subtitle: "호기심 많고 순수한 천재 탐구자",
+        reason: "모든 가능성을 열어두고 원리를 깊이 탐구하는 아이디어 천재입니다. 엉뚱해 보이지만 날카로운 지적 능력으로 진리를 찾아냅니다.",
+        matchMbti: "ENFJ",
+        matchPokemon: "토게키스",
+        matchId: 468,
+        matchReason: "너그럽고 친절한 토게키스가 뮤의 깊고 신비로운 지적 호기심을 따뜻하게 지지해 줍니다."
+      },
+      INFJ: {
+        mbti: "INFJ",
+        title: "통찰력 있는 조력자",
+        pokemon: "가디안",
+        emoji: "🛡️",
+        id: 282,
+        typeGroup: "I",
+        subtitle: "깊은 진정성과 헌신을 품은 수호자",
+        reason: "상대방의 마음을 깊이 헤아리는 뛰어난 공감력과 직관력을 가졌습니다. 소중한 가치와 사람들을 위해 묵묵히 헌신하는 따뜻한 조력자입니다.",
+        matchMbti: "ENTP",
+        matchPokemon: "팬텀",
+        matchId: 94,
+        matchReason: "장난기 넘치는 팬텀의 기발함이 가디안의 진지한 생각에 기분 좋은 활력과 웃음을 더해줍니다."
+      },
+      INTJ: {
+        mbti: "INTJ",
+        title: "지혜로운 전략가",
+        pokemon: "루카리오",
+        emoji: "🐺",
+        id: 448,
+        typeGroup: "I",
+        subtitle: "냉철한 판단력과 흔들림 없는 완벽주의",
+        reason: "파동을 느끼듯 사물의 본질을 파악하고 냉철하게 목표를 달성합니다. 흔들림 없는 집중력과 완벽한 전략으로 문제를 깔끔히 해결합니다.",
+        matchMbti: "ENFP",
+        matchPokemon: "피카츄",
+        matchId: 25,
+        matchReason: "피카츄의 밝은 에너지와 화기애애한 분위기가 루카리오의 엄격함에 훈훈한 온기를 불어넣어 줍니다."
+      },
+      ISFP: {
+        mbti: "ISFP",
+        title: "자유로운 예술가",
+        pokemon: "메타몽",
+        emoji: "🫠",
+        id: 132,
+        typeGroup: "I",
+        subtitle: "어디든 유연하게 스며드는 수용성",
+        reason: "편안하고 유연한 마음으로 타인을 온전히 배려합니다. 강요하지 않는 따뜻함으로 어디서나 부드럽고 조화로운 분위기를 만들어냅니다.",
+        matchMbti: "ESTJ",
+        matchPokemon: "거북왕",
+        matchId: 9,
+        matchReason: "단단한 거북왕의 결단력과 묵묵함이 메타몽의 자유로운 마음을 안전하게 울타리 쳐 줍니다."
+      },
+      ISTP: {
+        mbti: "ISTP",
+        title: "만능 장인",
+        pokemon: "잠만보",
+        emoji: "💤",
+        id: 143,
+        typeGroup: "I",
+        subtitle: "느긋함 속에 감춰진 실전 압도감",
+        reason: "평소에는 한없이 느긋하고 차분해 보이지만, 결정적인 기회가 오면 놀라운 집중력과 실천력으로 핵심을 단번에 해결해내는 장인입니다.",
+        matchMbti: "ESFJ",
+        matchPokemon: "해피너스",
+        matchId: 242,
+        matchReason: "다정하고 꼼꼼한 해피너스의 케어가 잠만보의 피로와 마음을 정성껏 보듬어줍니다."
+      },
+      ISFJ: {
+        mbti: "ISFJ",
+        title: "온화한 수호자",
+        pokemon: "이상해씨",
+        emoji: "🌿",
+        id: 1,
+        typeGroup: "I",
+        subtitle: "포근하고 헌신적인 세심한 수호자",
+        reason: "조용하지만 깊은 책임감으로 주변 사람들을 살뜰히 챙깁니다. 변함없는 포근함과 성실함으로 모두의 마음을 든든하게 받쳐줍니다.",
+        matchMbti: "ESTP",
+        matchPokemon: "리자몽",
+        matchId: 6,
+        matchReason: "자신감 넘치고 용맹한 리자몽이 이상해씨의 조용한 헌신에 든든하고 확실한 방패가 되어줍니다."
+      },
+      ISTJ: {
+        mbti: "ISTJ",
+        title: "굳건한 수호새",
+        pokemon: "아머까오",
+        emoji: "🦅",
+        id: 865,
+        typeGroup: "I",
+        subtitle: "철저한 신뢰와 변함없는 원칙주의자",
+        reason: "강철 날개처럼 철저한 신뢰와 변함없는 원칙을 지킵니다. 어떤 시련에도 흔들림 없이 맡은 책임을 신중하게 완수해 내는 파트너입니다.",
+        matchMbti: "ESFP",
+        matchPokemon: "푸린",
+        matchId: 39,
+        matchReason: "자유롭고 유쾌한 푸린의 생동감이 아머까오의 신중한 일상에 기분 좋은 미소를 전달합니다."
+      }
     };
 
-    const mbtiList = Object.keys(pokemonData);
+    let currentFilter = 'ALL';
 
-    // 페이지 로드 시 MBTI 버튼 생성
-    function initButtons() {
-        const grid = document.getElementById('mbti-grid');
-        grid.innerHTML = '';
-        
-        mbtiList.forEach(mbti => {
-            const btn = document.createElement('button');
-            btn.className = 'mbti-btn';
-            btn.innerHTML = `
-                ${mbti}
-            `;
-            btn.onclick = () => selectMBTI(mbti);
-            grid.appendChild(btn);
-        });
+    function renderGrid() {
+      const gridContainer = document.getElementById('mbti-grid');
+      gridContainer.innerHTML = '';
+
+      Object.keys(mbtiData).forEach(key => {
+        const item = mbtiData[key];
+
+        if (currentFilter !== 'ALL' && item.typeGroup !== currentFilter) {
+          return;
+        }
+
+        const cardEl = document.createElement('div');
+        cardEl.className = 'mbti-card';
+        cardEl.setAttribute('onclick', `selectMBTI('${key}')`);
+        cardEl.innerHTML = `
+          <div class="mbti-badge">${item.mbti}</div>
+          <div class="mbti-thumb-container">
+            <img class="mbti-thumb-img" src="${getArtworkUrl(item.id)}" alt="${item.pokemon}" loading="lazy" onerror="this.src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${item.id}.png'">
+          </div>
+          <div class="mbti-title">${item.title} (${item.pokemon})</div>
+        `;
+        gridContainer.appendChild(cardEl);
+      });
     }
 
-    // MBTI 선택 시 결과 표시
-    function selectMBTI(mbti) {
-        const data = pokemonData[mbti];
-        if (!data) return;
+    function filterMBTI(group, btnEl) {
+      currentFilter = group;
+      
+      const buttons = document.querySelectorAll('.filter-btn');
+      buttons.forEach(btn => btn.classList.remove('active'));
+      if (btnEl) btnEl.classList.add('active');
 
-        document.getElementById('res-mbti').innerText = mbti;
-        document.getElementById('res-emoji').innerText = data.emoji;
-        document.getElementById('res-name').innerText = data.name;
-        document.getElementById('res-reason').innerText = data.reason;
-        document.getElementById('res-match').innerText = data.match;
-
-        document.getElementById('selection-view').style.display = 'none';
-        document.getElementById('result-view').style.display = 'block';
-        
-        // 스크롤 상단 이동
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+      renderGrid();
     }
 
-    // 초기화 함수
-    function resetSelection() {
-        document.getElementById('result-view').style.display = 'none';
-        document.getElementById('selection-view').style.display = 'block';
+    function selectMBTI(mbtiKey) {
+      const data = mbtiData[mbtiKey];
+      if (!data) return;
+
+      // Reset image state
+      const artworkImg = document.getElementById('result-artwork');
+      const spinner = document.getElementById('artwork-spinner');
+      const fallbackEmoji = document.getElementById('artwork-fallback');
+      
+      artworkImg.style.opacity = '0';
+      spinner.style.display = 'block';
+      fallbackEmoji.style.display = 'none';
+
+      // Load official artwork
+      artworkImg.src = getArtworkUrl(data.id);
+
+      // Populate textual data
+      document.getElementById('result-mbti-badge').innerText = `${data.mbti} · ${data.title}`;
+      document.getElementById('result-pokemon-name').innerText = data.pokemon;
+      document.getElementById('result-emoji').innerText = data.emoji;
+      document.getElementById('result-subtitle').innerText = `"${data.subtitle}"`;
+      document.getElementById('result-reason').innerText = data.reason;
+
+      // Populate best match details
+      document.getElementById('match-title').innerText = `${data.matchMbti} - ${data.matchPokemon}`;
+      document.getElementById('match-reason').innerText = data.matchReason;
+      
+      const matchArtImg = document.getElementById('match-artwork');
+      matchArtImg.style.display = 'block';
+      matchArtImg.src = getArtworkUrl(data.matchId);
+
+      // View transitions
+      document.getElementById('mbti-grid').style.display = 'none';
+      document.getElementById('filter-bar').style.display = 'none';
+      
+      const resultSec = document.getElementById('result-section');
+      resultSec.style.display = 'block';
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // 실행
-    window.onload = initButtons;
-</script>
+    function handleImgLoad() {
+      document.getElementById('artwork-spinner').style.display = 'none';
+      document.getElementById('result-artwork').style.opacity = '1';
+    }
 
+    function handleImgError() {
+      document.getElementById('artwork-spinner').style.display = 'none';
+      document.getElementById('result-artwork').style.opacity = '0';
+      
+      // Show fallback emoji
+      const fallbackEmoji = document.getElementById('artwork-fallback');
+      fallbackEmoji.innerText = document.getElementById('result-emoji').innerText;
+      fallbackEmoji.style.display = 'block';
+    }
+
+    function resetView() {
+      document.getElementById('result-section').style.display = 'none';
+      document.getElementById('mbti-grid').style.display = 'grid';
+      document.getElementById('filter-bar').style.display = 'flex';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function copyResult() {
+      const mbtiText = document.getElementById('result-mbti-badge').innerText;
+      const pokemon = document.getElementById('result-pokemon-name').innerText;
+      const emoji = document.getElementById('result-emoji').innerText;
+      
+      const shareText = `[MBTI 포켓몬 찾기 ⚡]\n나의 MBTI (${mbtiText})와 닮은 포켓몬은 "${emoji} ${pokemon}"입니다!\n자신만의 포켓몬을 확인해 보세요!`;
+
+      const tempTextArea = document.createElement("textarea");
+      tempTextArea.value = shareText;
+      document.body.appendChild(tempTextArea);
+      tempTextArea.select();
+      
+      try {
+        document.execCommand('copy');
+        showToast("결과 요약이 클립보드에 복사되었습니다! 🎉");
+      } catch (err) {
+        showToast("복사에 실패했습니다.");
+      } finally {
+        document.body.removeChild(tempTextArea);
+      }
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2500);
+    }
+
+    window.onload = function() {
+      renderGrid();
+    };
+  </script>
 </body>
 </html>
